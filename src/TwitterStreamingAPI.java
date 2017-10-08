@@ -14,6 +14,8 @@ import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterStreamingAPI {
+	
+	public static int counter=0;
     
     public static void main(String[] args){
         
@@ -21,7 +23,11 @@ public class TwitterStreamingAPI {
             public void onStatus(Status status) {
 
             	String rawJSON = TwitterObjectFactory.getRawJSON(status);
-            	//System.out.println(rawJSON);
+            	if(counter++ != 0) {
+            		rawJSON = "," + rawJSON;
+            	}
+            	System.out.println(counter + " tweets appended");
+            	
             	try {
             	    Files.write(Paths.get("tweets.txt"), rawJSON.getBytes(), StandardOpenOption.APPEND);
             	}catch (IOException e) {
