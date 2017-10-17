@@ -35,12 +35,6 @@ db.emp.find({$or:[{'personal.name': 'A'},{'personal.age': 30}]}, {'personal.name
 //remove the id
 db.emp.find({$or:[{'personal.name': 'A'},{'personal.age': 30}]}, {'personal.name':1, 'professional.designation': 1, '_id': 0}).pretty()
 
-//show specific attributes
-db.emp.find({$or:[{'personal.name': 'A'},{'personal.age': 30}]}, {'personal.name':1, 'professional.designation': 1}).pretty()
-
-//dont want to see id
-db.emp.find({$or:[{'personal.name': 'A'},{'personal.age': 30}]}, {'personal.name':1, 'professional.designation': 1, '_id': 0}).pretty()
-
 //update data (without specifying id, it is a normal insert)
 db.emp.save({'_id': 'ObjectId(e1)', 'personal': {'age': 51}, 'professional': {'designation': 'CEO'}})
 
