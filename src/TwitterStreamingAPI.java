@@ -24,7 +24,7 @@ public class TwitterStreamingAPI {
 
             	String rawJSON = TwitterObjectFactory.getRawJSON(status);
             	if(counter++ != 0) {
-            		rawJSON = "," + rawJSON;
+            		rawJSON = "\n" + rawJSON;
             	}
             	System.out.println(counter + " tweets appended");
             	
