@@ -1,0 +1,78 @@
+//create a database or switch to a database
+use mydb
+//show databases
+show dbs
+//drop databases
+db.dropDatabase()
+
+*****Table emp******
+
+//insert data in table/collection 'emp'
+//insert a single row
+db.emp.insert({'_id': 'ObjectId(e1)', 'personal': {'name': 'A', 'age': 50}, 'professional': {'designation': 'Head'}})
+
+//insert multiple row
+db.emp.insert([{'_id': 'ObjectId(e2)', 'personal': {'name': 'B', 'age': 25}}, {'_id': 'ObjectId(e3)', 'personal': {'name': 'C', 'age': 30}, 'professional': {'designation': 'Programmer'}}, {'_id': 'ObjectId(e4)', 'personal': {'name': 'D','age': 30}, 'professional': {'designation': 'Intern'}}])
+
+//show all the data
+db.emp.find().pretty()
+
+//count all the data
+db.emp.find().count()
+
+//drop table/collection
+db.emp.drop()
+
+//using and
+db.emp.find({$and:[{'_id': 'ObjectId(e1)'},{'personal.name': 'A'}]}).pretty()
+
+//using or
+db.emp.find({$or:[{'personal.name': 'A'},{'personal.age': 30}]}).pretty()
+
+//see specific columns
+db.emp.find({$or:[{'personal.name': 'A'},{'personal.age': 30}]}, {'personal.name':1, 'professional.designation': 1}).pretty()
+
+//remove the id
+db.emp.find({$or:[{'personal.name': 'A'},{'personal.age': 30}]}, {'personal.name':1, 'professional.designation': 1, '_id': 0}).pretty()
+
+//show specific attributes
+db.emp.find({$or:[{'personal.name': 'A'},{'personal.age': 30}]}, {'personal.name':1, 'professional.designation': 1}).pretty()
+
+//dont want to see id
+db.emp.find({$or:[{'personal.name': 'A'},{'personal.age': 30}]}, {'personal.name':1, 'professional.designation': 1, '_id': 0}).pretty()
+
+//update data (without specifying id, it is a normal insert)
+db.emp.save({'_id': 'ObjectId(e1)', 'personal': {'age': 51}, 'professional': {'designation': 'CEO'}})
+
+//delete data
+db.emp.remove({'professional.designation': 'CEO'})
+
+
+***** Table Twitter *****
+
+//import json file
+mongoimport --db mydb --collection Twitter --type json --file '/home/cloudera/git/DownloadTwitterStream/tweets.txt' 
+
+//find tweets with specific word or pattern
+db.Twitter.find({'text':{$regex:'can'}},{'text':1,'_id':0})
+
+//sort by user name alphabatically
+db.Twitter.find({},{'user.name':1,'_id':0}).sort({'user.name':1})
+
+//limit how many data to see
+db.Twitter.find({},{'user.name':1,'_id':0}).sort({'user.name':1}).limit(4)
+
+//see users with more than 2000 friends
+db.Twitter.find({'user.friends_count':{$gte:2000}},{'user.name':1,'user.friends_count':1,'_id':0})
+
+//how many tweets by same language
+db.Twitter.aggregate([{$group: {'_id':'$user.lang','CountLang':{$sum:1}}}])
+
+//average number of friends count with different language
+db.Twitter.aggregate([{$group: {'_id':'$user.lang','AvgFol':{$avg:'$user.friends_count'}}}])
+
+//total number of same hashtags in tweets
+db.Twitter.aggregate([{$unwind:'$entities.hashtags'},{$group:{'_id':'$entities.hashtags.text','hashCount':{$sum:1}}}])
+
+//sort and limit the previous query
+db.Twitter.aggregate([{$unwind:'$entities.hashtags'},{$group:{'_id':'$entities.hashtags.text','hashCount':{$sum:1}}},{$limit:3},{$sort:{'hashCount':1}}])
