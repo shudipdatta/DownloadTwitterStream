@@ -49,8 +49,11 @@ db.emp.remove({'professional.designation': 'CEO'})
 
 ***** Table Twitter *****
 
-//import json file (don't forget to exit mongodb
+//import json file (don't forget to exit mongodb)
 mongoimport --db mydb --collection Twitter --type json --file '/home/cloudera/git/DownloadTwitterStream/tweets.txt' 
+
+//just an example how to insert csv file
+mongoimport --db mydb --collection csvtwitter --type csv --headerline --file '/home/cloudera/git/HBase_Demo/Twitter.csv'
 
 //find tweets with specific word or pattern
 db.Twitter.find({'text':{$regex:'can'}},{'text':1,'_id':0})
