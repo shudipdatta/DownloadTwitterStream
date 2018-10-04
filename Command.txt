@@ -1,3 +1,8 @@
+//enter into mongodb
+mongo
+//exit from mongodb
+exit
+
 //create a database or switch to a database
 use mydb
 //show databases
@@ -44,7 +49,7 @@ db.emp.remove({'professional.designation': 'CEO'})
 
 ***** Table Twitter *****
 
-//import json file
+//import json file (don't forget to exit mongodb
 mongoimport --db mydb --collection Twitter --type json --file '/home/cloudera/git/DownloadTwitterStream/tweets.txt' 
 
 //find tweets with specific word or pattern
